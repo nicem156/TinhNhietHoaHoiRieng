@@ -9,15 +9,248 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab-style.css">
+<style>
+:root {
+  --bg: #EEF4F6;
+  --paper: #FFFFFF;
+  --ink: #0F2733;
+  --ink-2: #4A6270;
+  --water: #0B5C80;
+  --water-deep: #094B69;
+  --water-soft: #DCEBF2;
+  --heat: #E9A11C;
+  --heat-soft: #FFF1D0;
+  --line: #CBDAE0;
+  --danger: #B3261E;
+  --font-display: "Bricolage Grotesque", "Be Vietnam Pro", system-ui, sans-serif;
+  --font-text: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 1rem/1.6 var(--font-text);
+}
+sub, sup { line-height: 0; }
+.wrap {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 40px);
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.bar { text-decoration: overline; }
+.muted { color: var(--ink-2); }
+
+/* ---------- Hero ---------- */
+.hero {
+  padding-block: clamp(2rem, 6vw, 4.5rem) clamp(1.75rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--line);
+}
+.hero h1 {
+  margin: 0;
+  max-width: 16ch;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 7vw, 5rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variation-settings: "wdth" 86;
+}
+.lede {
+  max-width: 58ch;
+  margin: 1.1rem 0 0;
+  font-size: 1.125rem;
+  color: var(--ink-2);
+}
+
+/* ---------- Thang đo ---------- */
+.gauge { margin: clamp(1.75rem, 4vw, 3rem) 0 0; }
+.gauge-caption { margin-bottom: .6rem; font-weight: 600; }
+.gauge-track { position: relative; height: 100px; margin-inline: 1.25rem; }
+.gauge-bar {
+  position: absolute; inset-inline: 0; top: 38px; height: 20px; border-radius: 999px;
+  background: linear-gradient(90deg, #0B5C80 0%, #6FB1CB 42%, #F6D08A 72%, #E9A11C 100%);
+}
+.gauge-ref {
+  position: absolute; top: 30px; height: 40px; width: 4px; margin-left: -2px;
+  background: var(--ink); border-radius: 2px; box-shadow: 0 0 0 2px var(--bg);
+}
+.pin {
+  position: absolute; left: 0; width: 0; opacity: 0;
+  transition: left .9s cubic-bezier(.22, .9, .3, 1), opacity .4s ease;
+}
+.pin.is-on { opacity: 1; }
+.pin-group { top: 0; height: 38px; }
+.pin-group::before {
+  content: ""; position: absolute; left: -9px; top: 0; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--water); box-shadow: 0 0 0 3px var(--bg);
+}
+.pin-group::after {
+  content: ""; position: absolute; left: -1px; top: 18px; width: 2px; height: 20px; background: var(--water);
+}
+.pin-live { top: 58px; height: 42px; }
+.pin-live::before {
+  content: ""; position: absolute; left: -1px; top: 0; width: 2px; height: 22px; background: var(--ink);
+}
+.pin-live::after {
+  content: ""; position: absolute; left: -8px; top: 23px; width: 16px; height: 16px;
+  background: var(--heat); border: 2px solid var(--ink); transform: rotate(45deg);
+}
+.gauge-scale {
+  position: relative; height: 1.7rem; margin: .35rem 1.25rem 0;
+  font-size: .8rem; color: var(--ink-2);
+}
+.gauge-scale span {
+  position: absolute; top: 0; transform: translateX(-50%); font-variant-numeric: tabular-nums;
+}
+.gauge-scale span::before {
+  content: ""; display: block; width: 1px; height: 6px; margin: 0 auto 2px; background: var(--ink-2);
+}
+.gauge-readout {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem 2rem; margin: 1.25rem 0 0;
+}
+.readout dt { display: flex; align-items: center; gap: .55rem; font-size: .9rem; color: var(--ink-2); }
+.readout dd { margin: .15rem 0 0; font: 700 1.5rem/1.25 var(--font-display); }
+.readout .unit-inline { font: 500 .9rem var(--font-text); color: var(--ink-2); }
+.readout-note { display: block; font: 400 .85rem/1.4 var(--font-text); color: var(--ink-2); }
+.key { flex: none; display: inline-block; }
+.key-group { width: .8rem; height: .8rem; border-radius: 50%; background: var(--water); }
+.key-live { width: .65rem; height: .65rem; margin: 0 .07rem; background: var(--heat); border: 2px solid var(--ink); transform: rotate(45deg); }
+.key-ref { width: 4px; height: 1rem; margin: 0 .2rem; background: var(--ink); border-radius: 2px; }
+
+/* ---------- Thí nghiệm ---------- */
+main { padding-block: clamp(1rem, 3vw, 2rem) clamp(2rem, 5vw, 3.5rem); }
+.exp { padding-block: clamp(1.75rem, 4vw, 2.75rem); }
+.exp + .exp { border-top: 1px solid var(--line); }
+.exp-head h2 {
+  display: flex; align-items: center; gap: .7rem; margin: 0;
+  font: 700 clamp(1.5rem, 3.5vw, 2.1rem)/1.2 var(--font-display); letter-spacing: -.02em;
+}
+.exp-head p { max-width: 60ch; margin: .4rem 0 1.25rem; color: var(--ink-2); }
+.swatch { flex: none; width: .9rem; height: .9rem; }
+.swatch-group { border-radius: 50%; background: var(--water); }
+.swatch-live { width: .75rem; height: .75rem; background: var(--heat); border: 2px solid var(--ink); transform: rotate(45deg); }
+
+.table-wrap {
+  overflow-x: auto; background: var(--paper);
+  border: 1px solid var(--line); border-radius: 12px;
+}
+table.data {
+  width: 100%; min-width: 780px; border-collapse: collapse; font-variant-numeric: tabular-nums;
+}
+.data th, .data td { padding: .7rem .9rem; text-align: right; }
+.data thead th {
+  background: var(--water); color: #fff; font-size: .85rem; font-weight: 600;
+  line-height: 1.3; vertical-align: bottom;
+}
+.data thead th.c-result { background: var(--water-deep); }
+.data .unit { display: block; margin-top: .15rem; font-weight: 400; opacity: .85; }
+.data .c-n, .data tbody th { width: 3.75rem; text-align: center; }
+.data tbody th { font-weight: 600; color: var(--ink-2); }
+.data tbody tr + tr > * { border-top: 1px solid var(--line); }
+.calc-cell { white-space: nowrap; }
+.data td.result { background: var(--heat-soft); font-weight: 700; }
+.data .c-del { width: 3rem; padding-inline: .4rem; text-align: center; }
+
+.cell-input {
+  width: 100%; min-width: 5.5rem; padding: .45rem .55rem;
+  font: inherit; font-variant-numeric: tabular-nums; text-align: right; color: var(--ink);
+  background: transparent; border: 1px solid transparent; border-bottom-color: var(--line); border-radius: 6px;
+}
+.cell-input:hover { background: var(--water-soft); }
+.cell-input:focus-visible { outline: 2px solid var(--water); outline-offset: 1px; background: var(--paper); }
+.cell-input[aria-invalid="true"] { border-color: var(--danger); background: #FDEDEB; }
+
+.actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+.btn {
+  padding: .7rem 1.1rem; font: 600 .95rem/1 var(--font-text); color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 8px; cursor: pointer;
+}
+.btn:hover { border-color: var(--water); }
+.btn-primary { background: var(--water); border-color: var(--water); color: #fff; }
+.btn-primary:hover { background: var(--water-deep); border-color: var(--water-deep); }
+.btn-danger { color: var(--danger); }
+.btn-danger:hover { border-color: var(--danger); }
+.icon-btn {
+  width: 2rem; height: 2rem; font: 500 1.25rem/1 var(--font-text); color: var(--ink-2);
+  background: transparent; border: 0; border-radius: 6px; cursor: pointer;
+}
+.icon-btn:hover { background: #FDEDEB; color: var(--danger); }
+.btn:focus-visible, .icon-btn:focus-visible, .table-wrap:focus-visible {
+  outline: 3px solid var(--water); outline-offset: 2px;
+}
+.notes { margin: .8rem 0 0; padding: 0; list-style: none; font-size: .9rem; color: var(--danger); }
+.notes:empty { display: none; }
+
+/* ---------- Phân tích ---------- */
+.analysis { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); margin-top: clamp(1.5rem, 3vw, 2.25rem); }
+@media (min-width: 900px) {
+  .analysis { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; }
+}
+.calc h3, .chart h3 { margin: 0; font: 700 1.2rem/1.3 var(--font-display); letter-spacing: -.01em; }
+.calc h3 { margin-bottom: .75rem; }
+.result-value {
+  margin: 0 0 .5rem; padding: .65rem .9rem;
+  font: 700 clamp(1.3rem, 2.4vw, 1.65rem)/1.3 var(--font-display); letter-spacing: -.01em;
+  background: var(--heat-soft); border-left: 4px solid var(--heat); border-radius: 0 8px 8px 0;
+}
+.calc-list { margin: 0; }
+.calc-row {
+  display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: baseline;
+  padding: .8rem 0; border-bottom: 1px solid var(--line);
+}
+.calc-row dt { color: var(--ink); }
+.calc-row dt small { display: block; margin-top: .1rem; font-size: .85rem; color: var(--ink-2); }
+.calc-row dd { margin: 0; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.empty { margin: 0; color: var(--ink-2); }
+
+.chart {
+  margin: 0; padding: 1rem 1rem .8rem;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+}
+.chart figcaption { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; margin-bottom: .5rem; }
+.formula { margin: 0; font-size: .9rem; color: var(--ink-2); }
+.chart-host { min-height: 120px; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart svg text { font: 500 12px var(--font-text); fill: var(--ink-2); }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .axis { stroke: var(--ink-2); stroke-width: 1.2; }
+.chart .fit { fill: none; stroke: var(--ink); stroke-width: 2; }
+.chart .ref { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 6 5; opacity: .7; }
+.chart .pt-group { fill: var(--water); stroke: var(--paper); stroke-width: 2; }
+.chart .pt-live { fill: var(--heat); stroke: var(--ink); stroke-width: 1.5; }
+.chart svg text.pt-num { font-weight: 700; font-size: 11px; fill: var(--ink); }
+.chart svg text.ref-label { fill: var(--ink); }
+.legend {
+  display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; margin: .6rem 0 0; padding: 0;
+  list-style: none; font-size: .85rem; color: var(--ink-2);
+}
+.legend li { display: flex; align-items: center; gap: .45rem; }
+.line-key { width: 1.5rem; border-top: 2px solid var(--ink); }
+.line-key.dashed { border-top-style: dashed; }
+
+/* ---------- Chân trang ---------- */
+.foot { padding-block: 1.75rem 2.5rem; border-top: 1px solid var(--line); font-size: .9rem; color: var(--ink-2); }
+.foot p { max-width: 75ch; margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pin { transition: none; }
+}
+</style>
 </head>
 <body>
 
 <header class="hero">
   <div class="wrap">
-    <p class="eyebrow-nav"><a href="index.html" aria-current="page">Hóa hơi</a><span aria-hidden="true">·</span><a href="nhiet-dung-rieng.html">Nhiệt dung riêng</a><span aria-hidden="true">·</span><a href="nhiet-nong-chay.html">Nhiệt nóng chảy</a></p>
     <h1>Nhiệt hóa hơi riêng của nước</h1>
-    <p class="lede">Nhiệt lượng cần cung cấp để 1&nbsp;kg nước hóa hơi hoàn toàn ở nhiệt độ sôi, xác định bằng bếp điện công suất P&nbsp;=&nbsp;2000&nbsp;W, hiệu suất H&nbsp;=&nbsp;90&nbsp;%.</p>
+    <p class="lede">Nhiệt lượng cần cung cấp để 1 kg nước hóa hơi hoàn toàn ở nhiệt độ sôi, tính từ công suất bếp, thời gian đun và khối lượng nước hao đi.</p>
 
     <figure class="gauge" aria-labelledby="gauge-caption">
       <figcaption class="gauge-caption" id="gauge-caption">Thang nhiệt hóa hơi riêng, đơn vị 10<sup>6</sup> J/kg</figcaption>
@@ -52,7 +285,7 @@
 
 <footer class="foot">
   <div class="wrap">
-    <p>Nhiệt lượng có ích do bếp cung cấp Q<sub>ích</sub> = H·P·Δt được dùng để làm nước hóa hơi: L&nbsp;=&nbsp;Q<sub>ích</sub>/Δm&nbsp;=&nbsp;H·P·Δt/Δm, với Δm&nbsp;=&nbsp;m<sub>1</sub>&nbsp;−&nbsp;m<sub>2</sub> là khối lượng nước đã hóa hơi (khối lượng bình tự triệt tiêu ở hai lần cân). Một phần nhiệt vẫn hao ra ngoài nên L đo được thường lệch so với giá trị tham khảo 2,26·10<sup>6</sup> J/kg.</p>
+    <p>Công thức L = P·Δt / Δm coi toàn bộ nhiệt lượng của bếp là dùng để làm nước hóa hơi. Thực tế, một phần nhiệt hao vào bình và không khí, một phần dùng để làm nước nóng lên đến nhiệt độ sôi, nên L đo được thường lớn hơn giá trị tham khảo 2,26·10<sup>6</sup> J/kg.</p>
   </div>
 </footer>
 
@@ -62,38 +295,43 @@
 
   /* ================= Cấu hình & số liệu ================= */
   const REF_L = 2.26e6;                 // J/kg, giá trị tham khảo ở 100 °C
-  const P_HEAT = 2000;                  // W, công suất bếp
-  const EFF = 0.90;                     // hiệu suất bếp
-  const G_MIN = 1.6e6, G_MAX = 2.8e6, G_STEP = 0.2e6;   // thang đo ở đầu trang
+  const G_MIN = 1.8e6, G_MAX = 2.8e6, G_STEP = 0.2e6;   // thang đo ở đầu trang
 
-  // Số liệu của nhóm — lấy từ bảng đo thực tế (đơn vị gam cho khối lượng, giây cho thời gian).
+  // Số liệu của nhóm: sửa trực tiếp các dòng này bằng số liệu thật của bạn.
+  // P (W), t = Δt (s), m1 và m2 (kg). Dùng dấu chấm cho số thập phân.
   const GROUP_DATA = [
-    { t: '60', m1: '1350', m2: '1300' },
-    { t: '60', m1: '1350', m2: '1300' },
-    { t: '60', m1: '1350', m2: '1300' }
+    { P: '1000', t: '120', m1: '0.500', m2: '0.450' },
+    { P: '1000', t: '180', m1: '0.500', m2: '0.423' },
+    { P: '1000', t: '240', m1: '0.500', m2: '0.396' },
+    { P: '1000', t: '300', m1: '0.500', m2: '0.369' },
+    { P: '1000', t: '360', m1: '0.500', m2: '0.344' }
   ];
   const SAMPLE_DATA = [
-    { t: '60', m1: '1350', m2: '1310' },
-    { t: '90', m1: '1350', m2: '1285' },
-    { t: '120', m1: '1350', m2: '1260' }
+    { P: '800', t: '300', m1: '0.450', m2: '0.350' },
+    { P: '800', t: '420', m1: '0.450', m2: '0.306' },
+    { P: '800', t: '540', m1: '0.450', m2: '0.262' },
+    { P: '800', t: '660', m1: '0.450', m2: '0.218' }
   ];
   const FIELDS = [
-    { key: 't',  label: 'Thời gian đun Δt',                 unit: 's' },
-    { key: 'm1', label: 'Khối lượng bình + nước lúc đầu m<sub>1</sub>', unit: 'g' },
-    { key: 'm2', label: 'Khối lượng bình + nước lúc sau m<sub>2</sub>', unit: 'g' }
+    { key: 'P',  label: 'Công suất đun',           unit: 'W'  },
+    { key: 't',  label: 'Thời gian đun',           unit: 's'  },
+    { key: 'm1', label: 'Khối lượng nước đầu',     unit: 'kg' },
+    { key: 'm2', label: 'Khối lượng nước còn lại', unit: 'kg' }
   ];
-  const blank = () => ({ t: '', m1: '', m2: '' });
+  const blank = () => ({ P: '', t: '', m1: '', m2: '' });
 
   /* ================= Tiện ích ================= */
   const $ = (s, r = document) => r.querySelector(s);
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
+  // Đọc số, chấp nhận cả dấu phẩy lẫn dấu chấm thập phân.
   function num(s) {
     const t = String(s == null ? '' : s).trim().replace(/\s+/g, '').replace(',', '.');
     if (t === '') return NaN;
     const n = Number(t);
     return Number.isFinite(n) ? n : NaN;
   }
+  // Định dạng kiểu Việt Nam: 1.234.567,89
   function fmt(n, d = 0) {
     if (!Number.isFinite(n)) return '—';
     const s = Math.abs(n).toFixed(d);
@@ -106,8 +344,8 @@
 
   /* ================= Tính toán ================= */
   function compute(r) {
-    const out = { dm: null, Q: null, L: null, status: 'incomplete', msg: '', bad: null };
-    const keys = ['t', 'm1', 'm2'];
+    const out = { dm: null, L: null, status: 'incomplete', msg: '', bad: null };
+    const keys = ['P', 't', 'm1', 'm2'];
     const v = {};
     keys.forEach(k => { v[k] = num(r[k]); });
 
@@ -120,15 +358,16 @@
         out.msg = 'm<sub>2</sub> phải nhỏ hơn m<sub>1</sub> vì nước đã hóa hơi bớt';
         return out;
       }
-      out.dm = Math.round((v.m1 - v.m2) * 1e6) / 1e6;
+      out.dm = Math.round((v.m1 - v.m2) * 1e9) / 1e9;
     }
     if (keys.some(k => Number.isNaN(v[k]))) return out;
-    if (v.t <= 0) { out.status = 'error'; out.bad = 't'; out.msg = 'thời gian đun phải lớn hơn 0'; return out; }
-    if (v.m2 <= 0) { out.status = 'error'; out.bad = 'm2'; out.msg = 'khối lượng phải là số dương'; return out; }
+
+    if (v.P <= 0)  { out.status = 'error'; out.bad = 'P';  out.msg = 'công suất phải lớn hơn 0'; return out; }
+    if (v.t <= 0)  { out.status = 'error'; out.bad = 't';  out.msg = 'thời gian đun phải lớn hơn 0'; return out; }
+    if (v.m1 <= 0 || v.m2 < 0) { out.status = 'error'; out.bad = v.m1 <= 0 ? 'm1' : 'm2'; out.msg = 'khối lượng phải là số dương'; return out; }
 
     out.status = 'ok';
-    out.Q = P_HEAT * EFF * v.t;
-    out.L = out.Q / (out.dm / 1000);
+    out.L = v.P * v.t / out.dm;
     return out;
   }
 
@@ -154,31 +393,30 @@
     return { list, min: start, max: end, step };
   }
 
-  function drawChart(host, pts, kind, width, opts) {
+  function drawChart(host, pts, kind, width) {
     if (!pts.length) {
       host.innerHTML = '<p class="empty">Đồ thị xuất hiện khi có ít nhất một lần đo hợp lệ.</p>';
       return;
     }
     const w = Math.max(280, width || 600);
     const h = Math.round(clamp(w * 0.62, 260, 380));
-    const m = { l: 62, r: 16, t: 18, b: 50 };
+    const m = { l: 58, r: 16, t: 18, b: 50 };
 
     const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
-    const yLo = Math.min(...ys, opts.ref), yHi = Math.max(...ys, opts.ref);
-    const pad = ((yHi - yLo) || Math.abs(opts.ref) * 0.2) * 0.3;
+    const yLo = Math.min(...ys, REF_L), yHi = Math.max(...ys, REF_L);
+    const pad = ((yHi - yLo) || 0.2e6) * 0.3;
     const xt = niceTicks(0, Math.max(...xs) * 1.12, 5);
     const yt = niceTicks(yLo - pad, yHi + pad, 5);
 
     const sx = v => m.l + (v - xt.min) / (xt.max - xt.min) * (w - m.l - m.r);
     const sy = v => h - m.b - (v - yt.min) / (yt.max - yt.min) * (h - m.t - m.b);
-    const yScale = opts.yScale || 1e6;
-    const yDec = opts.yDec != null ? opts.yDec : 2;
+    const yDec = Math.max(0, Math.min(3, -Math.floor(Math.log10(yt.step / 1e6) + 1e-9)));
     const xDec = xt.step >= 1 ? 0 : Math.min(3, Math.ceil(-Math.log10(xt.step)));
 
     let s = '';
     yt.list.forEach(v => {
       s += `<line class="grid" x1="${m.l}" x2="${w - m.r}" y1="${sy(v).toFixed(1)}" y2="${sy(v).toFixed(1)}"/>`;
-      s += `<text x="${m.l - 8}" y="${(sy(v) + 4).toFixed(1)}" text-anchor="end">${fmt(v / yScale, yDec)}</text>`;
+      s += `<text x="${m.l - 8}" y="${(sy(v) + 4).toFixed(1)}" text-anchor="end">${fmt(v / 1e6, yDec)}</text>`;
     });
     xt.list.forEach(v => {
       s += `<text x="${sx(v).toFixed(1)}" y="${h - m.b + 18}" text-anchor="middle">${fmt(v, xDec)}</text>`;
@@ -186,10 +424,12 @@
     s += `<line class="axis" x1="${m.l}" x2="${w - m.r}" y1="${h - m.b}" y2="${h - m.b}"/>`;
     s += `<line class="axis" x1="${m.l}" x2="${m.l}" y1="${m.t}" y2="${h - m.b}"/>`;
 
-    const ry = sy(opts.ref).toFixed(1);
+    // Đường tham khảo
+    const ry = sy(REF_L).toFixed(1);
     s += `<line class="ref" x1="${m.l}" x2="${w - m.r}" y1="${ry}" y2="${ry}"/>`;
-    s += `<text class="ref-label" x="${w - m.r - 4}" y="${(sy(opts.ref) - 7).toFixed(1)}" text-anchor="end">Tham khảo ${fmt(opts.ref / yScale, yDec)}</text>`;
+    s += `<text class="ref-label" x="${w - m.r - 4}" y="${(sy(REF_L) - 7).toFixed(1)}" text-anchor="end">Tham khảo 2,26</text>`;
 
+    // Đường xu hướng (bình phương tối thiểu)
     if (pts.length >= 2) {
       const n = pts.length, mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
       const sxx = xs.reduce((a, x) => a + (x - mx) ** 2, 0);
@@ -204,9 +444,10 @@
       }
     }
 
+    // Điểm đo
     pts.forEach(p => {
       const cx = sx(p.x), cy = sy(p.y);
-      const tip = `Lần ${p.n}: ${opts.tip(p)}`;
+      const tip = `Lần ${p.n}: 1/Δm = ${fmt(p.x, 2)} 1/kg, L = ${fmt(p.y, 0)} J/kg`;
       if (kind === 'live') {
         s += `<path class="pt-live" d="M${cx.toFixed(1)} ${(cy - 8).toFixed(1)} L${(cx + 8).toFixed(1)} ${cy.toFixed(1)} L${cx.toFixed(1)} ${(cy + 8).toFixed(1)} L${(cx - 8).toFixed(1)} ${cy.toFixed(1)}Z"><title>${tip}</title></path>`;
       } else {
@@ -215,11 +456,12 @@
       s += `<text class="pt-num" x="${(cx + 10).toFixed(1)}" y="${(cy - 9).toFixed(1)}">${p.n}</text>`;
     });
 
-    s += `<text x="${((m.l + w - m.r) / 2).toFixed(1)}" y="${h - 8}" text-anchor="middle">${opts.xLabel}</text>`;
+    // Tên trục
+    s += `<text x="${((m.l + w - m.r) / 2).toFixed(1)}" y="${h - 8}" text-anchor="middle">1/Δm (1/kg)</text>`;
     const cyT = ((m.t + h - m.b) / 2).toFixed(1);
-    s += `<text transform="rotate(-90 16 ${cyT})" x="16" y="${cyT}" text-anchor="middle">${opts.yLabel}</text>`;
+    s += `<text transform="rotate(-90 14 ${cyT})" x="14" y="${cyT}" text-anchor="middle">L (10<tspan dy="-4" font-size="9">6</tspan><tspan dy="4"> J/kg)</tspan></text>`;
 
-    host.innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Đồ thị với ${pts.length} điểm đo">${s}</svg>`;
+    host.innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Đồ thị L theo 1/Δm với ${pts.length} điểm đo">${s}</svg>`;
   }
 
   /* ================= Khung một thí nghiệm ================= */
@@ -241,10 +483,11 @@
         <table class="data">
           <thead><tr>
             <th scope="col" class="c-n">Lần</th>
+            ${th('Công suất đun P', 'W')}
             ${th('Thời gian đun Δt', 's')}
-            ${th('Khối lượng bình + nước m<sub>1</sub>', 'g')}
-            ${th('Khối lượng bình + nước lúc sau m<sub>2</sub>', 'g')}
-            ${th('Khối lượng nước hóa hơi Δm', 'g')}
+            ${th('Khối lượng nước đầu m<sub>1</sub>', 'kg')}
+            ${th('Khối lượng nước còn lại m<sub>2</sub>', 'kg')}
+            ${th('Khối lượng nước hóa hơi Δm = m<sub>1</sub> − m<sub>2</sub>', 'kg')}
             ${th('Nhiệt hóa hơi riêng L', 'J/kg', 'c-result')}
             ${editable ? '<th scope="col" class="c-del"><span class="sr-only">Xóa dòng</span></th>' : ''}
           </tr></thead>
@@ -258,7 +501,7 @@
         <figure class="chart">
           <figcaption>
             <h3>Đồ thị L theo 1/Δm</h3>
-            <p class="formula">L = H·P·Δt · (1/Δm)</p>
+            <p class="formula">L = P·Δt / Δm</p>
           </figcaption>
           <div class="chart-host"></div>
           <ul class="legend">
@@ -288,7 +531,7 @@
           inp.type = 'text'; inp.inputMode = 'decimal'; inp.autocomplete = 'off';
           inp.className = 'cell-input'; inp.value = r[f.key];
           inp.dataset.key = f.key; inp.dataset.row = i;
-          inp.setAttribute('aria-label', `${f.label.replace(/<[^>]+>/g, '')}, lần ${i + 1}, đơn vị ${f.unit}`);
+          inp.setAttribute('aria-label', `${f.label}, lần ${i + 1}, đơn vị ${f.unit}`);
           td.append(inp);
         } else {
           td.textContent = String(r[f.key]).replace('.', ',');
@@ -310,7 +553,7 @@
 
     function renderCalc(st) {
       if (!st) {
-        calc.innerHTML = '<h3>Xử lý số liệu</h3><p class="empty">Chưa có lần đo hợp lệ. Nhập đủ Δt, m<sub>1</sub> và m<sub>2</sub> ở một dòng để tính L.</p>';
+        calc.innerHTML = '<h3>Xử lý số liệu</h3><p class="empty">Chưa có lần đo hợp lệ. Nhập đủ P, Δt, m<sub>1</sub> và m<sub>2</sub> ở một dòng để tính L.</p>';
         return;
       }
       const multi = st.n > 1;
@@ -323,10 +566,9 @@
         <p class="result-value">${result}</p>
         ${multi ? '' : '<p class="empty">Cần ít nhất 2 lần đo hợp lệ để tính sai số.</p>'}
         <dl class="calc-list">
-          <div class="calc-row"><dt>Công suất có ích<small>H·P với H = 90&nbsp;%, P = 2000&nbsp;W</small></dt><dd>${fmt(P_HEAT * EFF, 0)} W</dd></div>
           <div class="calc-row"><dt>Số lần đo hợp lệ<small>n</small></dt><dd>${st.n}</dd></div>
           <div class="calc-row"><dt>Giá trị trung bình<small><span class="bar">L</span> = (L<sub>1</sub> + … + L<sub>n</sub>) / n</small></dt><dd>${fmt(st.mean, 0)} J/kg</dd></div>
-          <div class="calc-row"><dt>Sai số tuyệt đối trung bình<small>Δ<span class="bar">L</span> = (|L<sub>1</sub> − <span class="bar">L</span>| + … ) / n</small></dt><dd>${multi ? fmt(st.dev, 0) + ' J/kg' : '—'}</dd></div>
+          <div class="calc-row"><dt>Sai số tuyệt đối trung bình<small>Δ<span class="bar">L</span> = (|L<sub>1</sub> − <span class="bar">L</span>| + … + |L<sub>n</sub> − <span class="bar">L</span>|) / n</small></dt><dd>${multi ? fmt(st.dev, 0) + ' J/kg' : '—'}</dd></div>
           <div class="calc-row"><dt>Sai số tương đối<small>δ = Δ<span class="bar">L</span> / <span class="bar">L</span></small></dt><dd>${multi ? fmt(st.rel * 100, 1) + ' %' : '—'}</dd></div>
           <div class="calc-row"><dt>So với giá trị tham khảo<small>2,26·10<sup>6</sup> J/kg ở 100 °C</small></dt><dd>${sign}${fmt(Math.abs(st.diff) * 100, 1)} %</dd></div>
         </dl>`;
@@ -334,25 +576,14 @@
 
     function draw() {
       lastW = Math.round(host.clientWidth);
-      drawChart(host, pts, kind, lastW || 600, {
-        ref: REF_L, yScale: 1e6, yDec: 2,
-        xLabel: '1/Δm (1/kg)',
-        yLabel: 'L (10\u00B6 J/kg)'.replace('\u00B6', '<tspan></tspan>'),
-        tip: p => `1/Δm = ${fmt(p.x, 2)} 1/kg, L = ${fmt(p.y, 0)} J/kg`
-      });
-      // gán lại nhãn trục y đúng ký hiệu lũy thừa
-      const svg = host.querySelector('svg');
-      if (svg) {
-        const t = [...svg.querySelectorAll('text')].find(el => el.getAttribute('transform'));
-        if (t) t.innerHTML = 'L (10<tspan dy="-4" font-size="9">6</tspan><tspan dy="4"> J/kg)</tspan>';
-      }
+      drawChart(host, pts, kind, lastW || 600);
     }
 
     function refresh() {
       const res = rows.map(compute);
       [...tbody.rows].forEach((tr, i) => {
         const r = res[i];
-        $('[data-out="dm"]', tr).textContent = r.dm != null ? fmt(r.dm, 1) : '—';
+        $('[data-out="dm"]', tr).textContent = r.dm != null ? fmt(r.dm, 4) : '—';
         $('[data-out="L"]', tr).textContent = r.L != null ? fmt(r.L, 0) : '—';
         if (editable) {
           tr.querySelectorAll('.cell-input').forEach(inp => {
@@ -366,7 +597,7 @@
         .join('');
 
       const valid = res.map((r, i) => Object.assign({ n: i + 1 }, r)).filter(r => r.status === 'ok');
-      pts = valid.map(r => ({ n: r.n, x: 1000 / r.dm, y: r.L }));
+      pts = valid.map(r => ({ n: r.n, x: 1 / r.dm, y: r.L }));
       const st = statsOf(valid);
       renderCalc(st);
       draw();
@@ -482,6 +713,7 @@
     makeExperiment(sec, { kind: cfg.kind, editable: cfg.editable, initial: cfg.initial, onStats: updateGauge });
   });
 
+  // Hai khung hình để chuyển động của thang đo chỉ chạy một lần khi tải trang.
   requestAnimationFrame(() => requestAnimationFrame(() => {
     gaugeReady = true;
     applyGauge('group'); applyGauge('live');
