@@ -317,7 +317,7 @@ table.data {
     { key: 'm1', label: 'Khối lượng bình + nước đầu',     unit: 'kg' },
     { key: 'm2', label: 'Khối lượng bình + nước lúc sau', unit: 'kg' }
   ];
-  const blank = () => ({ P: '',  t: '', m1: '', m2: '' });
+  const blank = () => ({ P: '', t: '', m1: '', m2: '' });
 
   /* ================= Tiện ích ================= */
   const $ = (s, r = document) => r.querySelector(s);
@@ -344,7 +344,7 @@ table.data {
   /* ================= Tính toán ================= */
   function compute(r) {
     const out = { dm: null, L: null, status: 'incomplete', msg: '', bad: null };
-    const keys = ['P', 'H', 't', 'm1', 'm2'];
+    const keys = ['P', 't', 'm1', 'm2'];
     const v = {};
     keys.forEach(k => { v[k] = num(r[k]); });
 
