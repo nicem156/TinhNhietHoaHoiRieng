@@ -300,25 +300,24 @@ table.data {
   // Số liệu của nhóm: sửa trực tiếp các dòng này bằng số liệu thật của bạn.
   // P (W), t = Δt (s), m1 và m2 (kg). Dùng dấu chấm cho số thập phân.
   const GROUP_DATA = [
-    { P: '2000', H: '90', t: '60', m1: '1.350', m2: '1.300' },
-    { P: '2000', H: '90', t: '60', m1: '1.350', m2: '1.300' },
-    { P: '2000', H: '90', t: '60', m1: '1.350', m2: '1.300' },
-    { P: '2000', H: '90', t: '60', m1: '1.350', m2: '1.300' }
+    { P: '1800', t: '60', m1: '1.350', m2: '1.300' },
+    { P: '1800', t: '60', m1: '1.350', m2: '1.300' },
+    { P: '1800', t: '60', m1: '1.350', m2: '1.300' },
+    { P: '1800', t: '60', m1: '1.350', m2: '1.300' }
   ];
   const SAMPLE_DATA = [
-    { P: '800', H: '100', t: '300', m1: '0.450', m2: '0.350' },
-    { P: '800', H: '100', t: '420', m1: '0.450', m2: '0.306' },
-    { P: '800', H: '100', t: '540', m1: '0.450', m2: '0.262' },
-    { P: '800', H: '100', t: '660', m1: '0.450', m2: '0.218' }
+    { P: '800', t: '300', m1: '0.450', m2: '0.350' },
+    { P: '800', t: '420', m1: '0.450', m2: '0.306' },
+    { P: '800', t: '540', m1: '0.450', m2: '0.262' },
+    { P: '800', t: '660', m1: '0.450', m2: '0.218' }
   ];
   const FIELDS = [
     { key: 'P',  label: 'Công suất đun',           unit: 'W'  },
-    { key: 'H',  label: 'Hiệu suất',           unit: '%'  },
     { key: 't',  label: 'Thời gian đun',           unit: 's'  },
     { key: 'm1', label: 'Khối lượng bình + nước đầu',     unit: 'kg' },
     { key: 'm2', label: 'Khối lượng bình + nước lúc sau', unit: 'kg' }
   ];
-  const blank = () => ({ P: '', H: '',  t: '', m1: '', m2: '' });
+  const blank = () => ({ P: '',  t: '', m1: '', m2: '' });
 
   /* ================= Tiện ích ================= */
   const $ = (s, r = document) => r.querySelector(s);
@@ -367,7 +366,7 @@ table.data {
     if (v.m1 <= 0 || v.m2 < 0) { out.status = 'error'; out.bad = v.m1 <= 0 ? 'm1' : 'm2'; out.msg = 'khối lượng phải là số dương'; return out; }
 
     out.status = 'ok';
-    out.L = v.P.H * v.t / out.dm;
+    out.L = v.P * v.t / out.dm;
     return out;
   }
 
